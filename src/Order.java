@@ -14,7 +14,7 @@ public class Order {
     private int orderID;
     private int time;
     private int date;
-    private Vector<Product> products;
+    private Vector<Product> products = new Vector<>();
     private Vector productQunatity;
     private static int orderCount;
    
@@ -103,7 +103,7 @@ public class Order {
     }
     
     public void addProduct(Product product, int quantity) {
-        products.add(product);
+        this.products.add(product);
         total_price = product.getPrice();
     }
     

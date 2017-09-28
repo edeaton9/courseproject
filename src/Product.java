@@ -14,7 +14,7 @@ public class Product{
     private int productID;
     private int quantity;
     private int experation_date;
-    private static int productCount;
+    private static int productCount = 1;
     
     Product() {
         productID = productCount;

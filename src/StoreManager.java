@@ -16,21 +16,24 @@ public class StoreManager {
      * @param args the command line arguments
      */
     
-    private static Vector<Product> productQueue;
+    private static Vector<Product> productQueue = new Vector<Product>();
     
     public static void main(String[] args) {
+        
+        createProductSet(); // Creates Sample Data
+        
         int opt;
         Scanner scan = new Scanner(System.in);
         System.out.println("Inventory System Menu\n"
             + "1 - Checkout Customer\n"
             + "2 - Manage Inventory\n"
-            + "3 - Quit"); //print items 
+            + "3 - Quit");
         do
         {
          System.out.print("Enter code [1, 2, or 3]: ");
          opt = scan.nextInt();
          
-         if (opt < 1 && opt > 3) {
+         while (opt < 1 || opt > 3) {
              System.out.println("Invlaid option");
              System.out.print("Enter code [1, 2, or 3]: ");
             opt = scan.nextInt();
@@ -44,21 +47,23 @@ public class StoreManager {
             case 1: // Checkout Customer 
                System.out.println("Checkout Customer ");
                Order currentOrder = new Order();
-        
+  
                 do {
             
                     System.out.println("Checkout\n"
                          + "1 - Add Product\n"
-                         + "2 - Pay\n");
-                    System.out.println("Enter option 1 or 2: ");
+                         + "2 - View Products\n"                  
+                         + "3 - Pay\n");
+                    System.out.println("Enter option 1, 2 or 3: ");
                     opt = scan.nextInt();
         
-                     while (opt < 1 && opt > 2) {
+                     while (opt < 1 || opt > 3) {
                           System.out.println("Invlaid option");
                           System.out.println("Checkout\n"
                                + "1 - Add Product\n"
+                               + "2 - View Products\n"
                                + "2 - Pay\n");
-                          System.out.println("Enter option 1 or 2: ");
+                          System.out.println("Enter option 1, 2 or 3: ");
                           opt = scan.nextInt();
                         }
         
@@ -70,7 +75,7 @@ public class StoreManager {
                     switch(opt) { 
             
                      case 1: //Add Product to Order
-                        int productID;
+                        int productID; 
                         int quantity;
         
                         System.out.println("Enter the Product ID: ");
@@ -104,25 +109,14 @@ public class StoreManager {
                                          
                        //Adds product to the order 
                        currentOrder.addProduct(productQueue.get(productID), quantity);
-                
-                       // Display Checkout menu
-                       System.out.println("Checkout\n"
-                          + "1 - Add Product\n"
-                          + "2 - Pay\n");
-                       System.out.println("Enter option 1 or 2: ");
-                       opt = scan.nextInt();
-        
-                       // Error Checking for user inputted choice being eihter 1 or 2 
-                       while (opt < 1 && opt > 2) {
-                            System.out.println("Invlaid option");
-                            System.out.println("Checkout\n"
-                              + "1 - Add Product\n"
-                              + "2 - Pay\n");
-                              System.out.println("Enter option 1 or 2: ");
-                             opt = scan.nextInt();
-                         }
+                       
+                       
                        break;
-                    case 2: //Pay with Cash
+                     case 2:
+                         printProducts();
+                        
+                         break;
+                     case 3: //Pay with Cash
                        double moneyPaid;
                        double totalPrice;
                        double change;
@@ -142,7 +136,7 @@ public class StoreManager {
                     default:
                         break;
                       }
-                 } while(opt == 1);
+                 } while(opt > 0 && opt < 3);
                 
                displayMainMenu();
                System.out.print("Enter code [1, 2, or 3]: ");
@@ -250,10 +244,16 @@ public class StoreManager {
         return index; 
     }
      
-     public void printProducts(){
-        for (int i = 0; i < productQueue.size(); i++) {
-            productQueue.get(i).printProduct();
-        } 
+     public static void printProducts(){
+        if (productQueue.isEmpty())
+        {
+            System.out.println("There are no products in the Inventory");
+        }
+        else {
+            for (int i = 0; i < productQueue.size(); i++) {
+                System.out.println(productQueue.get(i).printProduct());
+            }
+        }
      }
      
      // Adds a new product to the product Queue
@@ -291,6 +291,20 @@ public class StoreManager {
         productQueue.add(product);
     }
     
+    /*
+    * Display Menu for User to select main attributes to modify 
+    */
+    public static void displayProductAttributesMenu()
+    {
+        System.out.println("1 - Product Name\n"
+                + "2 - Product Description\n"
+                + "3 - Product Price\n"
+                + "4 - Product Taxrate\n"
+                + "5 - Product Quantity\n"
+                + "6 - Product Experation Date\n"
+                + "7 - Return to Management Menu\n");
+    }
+    
     public static void manageProducts() {
         Scanner scan = new Scanner(System.in);
         for (int i = 0; i < productQueue.size(); i++) {
@@ -309,13 +323,7 @@ public class StoreManager {
         int productIndex = searchProductID(productID);
         
         System.out.println("Which field would you like to modify?");
-        System.out.println("1 - Product Name\n"
-                + "2 - Product Description\n"
-                + "3 - Product Price\n"
-                + "4 - Product Taxrate\n"
-                + "5 - Product Quantity\n"
-                + "6 - Product Experation Date\n"
-                + "7 - Return to Management Menu\n");
+        displayProductAttributesMenu();
         System.out.println("Enter an option [1,2,3,4,5,6,7]: ");
         int opt = scan.nextInt();
         while(opt < 1 || opt > 7) {
@@ -335,13 +343,7 @@ public class StoreManager {
                 productQueue.get(productIndex).setProductName(new_product_name);
                 
                 System.out.println("Which field would you like to modify?");
-                System.out.println("1 - Product Name\n"
-                   + "2 - Product Description\n"
-                   + "3 - Product Price\n"
-                   + "4 - Product Taxrate\n"
-                   + "5 - Product Quantity\n"
-                   + "6 - Product Experation Date\n"
-                   + "7 - Return to Management Menu\n");
+                displayProductAttributesMenu();
                 System.out.println("Enter an option [1,2,3,4,5,6,7]: ");
                 opt = scan.nextInt();
                 while(opt < 1 || opt > 7) {
@@ -358,13 +360,7 @@ public class StoreManager {
                 productQueue.get(productIndex).setDescription(new_product_description);
                 
                 System.out.println("Which field would you like to modify?");
-                System.out.println("1 - Product Name\n"
-                   + "2 - Product Description\n"
-                   + "3 - Product Price\n"
-                   + "4 - Product Taxrate\n"
-                   + "5 - Product Quantity\n"
-                   + "6 - Product Experation Date\n"
-                   + "7 - Return to Management Menu\n");
+                displayProductAttributesMenu();
                 System.out.println("Enter an option [1,2,3,4,5,6,7]: ");
                 opt = scan.nextInt();
                 while(opt < 1 || opt > 7) {
@@ -381,13 +377,7 @@ public class StoreManager {
                 productQueue.get(productIndex).setPrice(new_product_price);
                 
                 System.out.println("Which field would you like to modify?");
-                System.out.println("1 - Product Name\n"
-                   + "2 - Product Description\n"
-                   + "3 - Product Price\n"
-                   + "4 - Product Taxrate\n"
-                   + "5 - Product Quantity\n"
-                   + "6 - Product Experation Date\n"
-                   + "7 - Return to Management Menu\n");
+                displayProductAttributesMenu();
                 System.out.println("Enter an option [1,2,3,4,5,6,7]: ");
                 opt = scan.nextInt();
                 while(opt < 1 || opt > 7) {
@@ -404,13 +394,7 @@ public class StoreManager {
                 productQueue.get(productIndex).setTaxRate(new_product_taxrate);
                 
                 System.out.println("Which field would you like to modify?");
-                System.out.println("1 - Product Name\n"
-                   + "2 - Product Description\n"
-                   + "3 - Product Price\n"
-                   + "4 - Product Taxrate\n"
-                   + "5 - Product Quantity\n"
-                   + "6 - Product Experation Date\n"
-                   + "7 - Return to Management Menu\n");
+                displayProductAttributesMenu();
                 System.out.println("Enter an option [1,2,3,4,5,6,7]: ");
                 opt = scan.nextInt();
                 while(opt < 1 || opt > 7) {
@@ -427,13 +411,7 @@ public class StoreManager {
                 productQueue.get(productIndex).setQuantity(new_product_quantity);
                 
                 System.out.println("Which field would you like to modify?");
-                System.out.println("1 - Product Name\n"
-                   + "2 - Product Description\n"
-                   + "3 - Product Price\n"
-                   + "4 - Product Taxrate\n"
-                   + "5 - Product Quantity\n"
-                   + "6 - Product Experation Date\n"
-                   + "7 - Return to Management Menu\n");
+                displayProductAttributesMenu();
                 System.out.println("Enter an option [1,2,3,4,5,6,7]: ");
                 opt = scan.nextInt();
                 while(opt < 1 || opt > 7) {
@@ -450,13 +428,7 @@ public class StoreManager {
                 productQueue.get(productIndex).setExperationDate(new_product_exp);
                 
                 System.out.println("Which field would you like to modify?");
-                System.out.println("1 - Product Name\n"
-                   + "2 - Product Description\n"
-                   + "3 - Product Price\n"
-                   + "4 - Product Taxrate\n"
-                   + "5 - Product Quantity\n"
-                   + "6 - Product Experation Date\n"
-                   + "7 - Return to Management Menu\n");
+                displayProductAttributesMenu();
                 System.out.println("Enter an option [1,2,3,4,5,6,7]: ");
                 opt = scan.nextInt();
                 while(opt < 1 || opt > 7) {
@@ -469,14 +441,31 @@ public class StoreManager {
             default:
                 break;
           }
-        
-        
-        
-        
-        
-        
-        
+         
         
     }
+    
+    public static void createProductSet(){
+        // Creating Sample Products
+        
+        Product product1 = new Product("Apple", "Red Delicious", 1.75, 0.06, 50, 101317);
+        Product product2 = new Product("Bananna", "Constains 10 Banannas", 2.00, 0.06, 30, 101517);
+        Product product3 = (new Product("Eggs", "Contains 12 eggs", 2.75, 0.08, 40, 101717));
+        Product product4 = (new Product("Milk", "Whole Milk", 2.50, 0.08, 70, 100517));
+        Product product5 = (new Product("Bread", "Contains 20 slices", 3.00, 0.06, 45, 100617));
+        Product product6 = (new Product("Cheese", "Shredded Cheddar", 4.00, 0.08, 60, 112717));
+        Product product7 = (new Product("Steak", "Contains 2 T-Bones", 10.00, 0.05, 35, 100417));
+        
+        
+        productQueue.add(product1);
+        productQueue.add(product2);
+        productQueue.add(product3);
+        productQueue.add(product4);
+        productQueue.add(product5);
+        productQueue.add(product6);
+        productQueue.add(product7);
+        
+    }
+    
    
 }
