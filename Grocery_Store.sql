@@ -1,4 +1,4 @@
---CREATE DATABASE grocery_store;
+CREATE DATABASE grocery_store;
 
 CREATE TABLE products (
 	product_id		SERIAL  	PRIMARY KEY NOT NULL,
@@ -62,9 +62,3 @@ INSERT INTO products_in_order (order_id, product_id, quantity) VALUES
 	(5, 2, 1),
 	(5, 4, 2),
 	(5, 6, 1);
-
-
-
-
-
-
